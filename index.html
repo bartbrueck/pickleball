@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Black Butte Ranch 2026 Family Pickleball Tournament</title>
+  <style>
+    :root {
+      --bg: #f8faf6;
+      --surface: #ffffff;
+      --surface-2: #f1f5ee;
+      --surface-3: #e8efe4;
+      --ink: #1d1b20;
+      --muted: #625b71;
+      --outline: #d4d9d0;
+      --outline-strong: #9aa694;
+      --primary: #1b5e20;
+      --primary-dark: #0b3d17;
+      --primary-container: #d7f1dc;
+      --on-primary: #ffffff;
+      --secondary-container: #f3ead7;
+      --gold: #b7791f;
+      --danger: #ba1a1a;
+      --danger-container: #ffdad6;
+      --ok: #0f6b3e;
+      --shadow-1: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .08);
+      --shadow-2: 0 4px 12px rgba(0, 0, 0, .14), 0 2px 4px rgba(0, 0, 0, .08);
+      --shadow-3: 0 10px 28px rgba(0, 0, 0, .16), 0 4px 10px rgba(0, 0, 0, .08);
+      --radius: 22px;
+      --card-width: 312px;
+      --slot-height: 164px;
+      --page-pad: clamp(14px, 3vw, 36px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Roboto, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ecf7ec 0, transparent 30%), var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      padding: 24px var(--page-pad);
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--on-primary);
+      box-shadow: var(--shadow-2);
+    }
+
+    header h1 {
+      margin: 0;
+      max-width: 1100px;
+      font-size: clamp(26px, 4.5vw, 44px);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      font-weight: 900;
+    }
+
+    .wrap { padding: 18px var(--page-pad) 44px; }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      border: 0;
+      min-height: 40px;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-1);
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      font-size: 14px;
+      line-height: 1;
+      touch-action: manipulation;
+    }
+
+    button:hover { transform: translateY(-1px); box-shadow: var(--shadow-2); }
+    button:active { transform: translateY(0); box-shadow: var(--shadow-1); }
+    button:disabled { cursor: not-allowed; opacity: .62; transform: none; box-shadow: none; }
+    .primary { background: var(--primary); color: var(--on-primary); }
+    .ghost { background: var(--surface); color: var(--primary-dark); }
+    .danger { background: var(--danger-container); color: var(--danger); }
+    .small { font-size: 12px; padding: 7px 10px; min-height: 32px; }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      background: var(--surface-2);
+      color: var(--muted);
+      box-shadow: none;
+      border: 1px solid var(--outline);
+    }
+
+    .tab.active {
+      background: var(--primary-container);
+      color: var(--primary-dark);
+      border-color: transparent;
+      box-shadow: inset 0 0 0 1px rgba(27, 94, 32, .08);
+    }
+
+    .panel {
+      display: none;
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid rgba(212, 217, 208, .9);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: var(--shadow-2);
+      backdrop-filter: blur(10px);
+      margin-bottom: 22px;
+    }
+
+    .panel.active { display: block; }
+
+    .top-status {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.25fr) repeat(4, minmax(130px, .7fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .champion, .stat {
+      border: 1px solid var(--outline);
+      background: var(--surface);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .champion {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 92px;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--primary-dark);
+      background: linear-gradient(180deg, #ffffff, #eff8ef);
+    }
+
+    .champion span { display: block; color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 5px; }
+
+    .stat .label { color: var(--muted); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .045em; }
+    .stat .value { font-size: 30px; font-weight: 950; line-height: 1.1; margin-top: 6px; color: var(--primary-dark); }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 6px 0 12px;
+    }
+
+    .section-title h2 { margin: 0; font-size: 24px; color: var(--primary-dark); letter-spacing: -.02em; }
+    .section-title p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .bracket-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 0 18px;
+      border-radius: 22px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .bracket {
+      display: flex;
+      align-items: flex-start;
+      gap: 42px;
+      min-width: max-content;
+      padding: 10px 8px 18px;
+    }
+
+    .round {
+      min-width: var(--card-width);
+      width: var(--card-width);
+      scroll-snap-align: start;
+    }
+
+    .round h3 {
+      position: sticky;
+      left: 0;
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--primary-dark);
+      background: var(--surface-2);
+      border: 1px solid var(--outline);
+      border-radius: 999px;
+      padding: 9px 12px;
+      text-align: center;
+      z-index: 2;
+      box-shadow: var(--shadow-1);
+    }
+
+    .slot {
+      position: relative;
+      height: var(--slot-height);
+      display: flex;
+      align-items: center;
+    }
+
+    .slot.tall { height: calc(var(--slot-height) * 2); }
+    .slot.x-tall { height: calc(var(--slot-height) * 4); }
+    .slot.xx-tall { height: calc(var(--slot-height) * 8); }
+    .slot.compact { height: 128px; }
+    .slot.final-slot { height: 224px; }
+
+    .slot::after {
+      content: "";
+      position: absolute;
+      right: -42px;
+      top: 50%;
+      width: 42px;
+      height: 2px;
+      background: var(--outline-strong);
+      opacity: .62;
+    }
+
+    .round:last-child .slot::after,
+    .no-connector::after { display: none; }
+
+    .game {
+      position: relative;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: var(--shadow-1);
+      overflow: hidden;
+    }
+
+    .game.final { border-color: rgba(183, 121, 31, .45); background: linear-gradient(180deg, #fff, #fff7e6); }
+    .game.locked { border-color: rgba(15, 107, 62, .45); box-shadow: var(--shadow-2); }
+    .game.pending { opacity: .94; }
+
+    .game-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .game-title {
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .045em;
+      color: var(--muted);
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--primary-dark);
+      background: var(--primary-container);
+      border-radius: 999px;
+      padding: 5px 8px;
+      white-space: nowrap;
+    }
+
+    .team-btn, .placeholder-row {
+      width: 100%;
+      border: 1px solid var(--outline);
+      border-radius: 14px;
+      box-shadow: none;
+      margin: 6px 0;
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      min-height: 46px;
+    }
+
+    .team-btn:hover { transform: none; box-shadow: inset 0 0 0 2px rgba(27, 94, 32, .14); }
+    .team-btn.winner { background: #eaf7ed; border-color: #88c999; color: #064e3b; }
+    .team-btn.loser { background: #f5f5f5; color: #938f99; text-decoration: line-through; }
+
+    .placeholder-row {
+      color: #938f99;
+      font-weight: 800;
+      cursor: default;
+    }
+
+    .team-name { font-weight: 850; line-height: 1.2; }
+    .winner-mark { font-weight: 950; color: var(--ok); }
+
+    .score-input {
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid var(--outline);
+      border-radius: 14px;
+      padding: 11px 12px;
+      font: inherit;
+      font-size: 13px;
+      background: #fff;
+      min-height: 42px;
+    }
+
+    .score-input:disabled { background: #f6f6f6; color: #938f99; }
+
+    .game-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      min-height: 30px;
+    }
+
+    .winner-text { color: var(--muted); font-size: 12px; font-weight: 750; }
+    .path-text { color: var(--muted); font-size: 11px; font-weight: 750; line-height: 1.25; margin-top: 7px; }
+
+    .table-wrap { overflow-x: auto; border-radius: 20px; box-shadow: var(--shadow-1); }
+    table { width: 100%; border-collapse: collapse; background: #fff; overflow: hidden; }
+    th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--outline); font-size: 14px; }
+    th { background: var(--surface-2); color: var(--primary-dark); font-size: 12px; text-transform: uppercase; letter-spacing: .045em; }
+    tr.eliminated td { color: #938f99; text-decoration: line-through; }
+    tr.champion-row td { background: #fff7e6; font-weight: 900; color: var(--primary-dark); }
+    tr.alive td:first-child { font-weight: 850; }
+
+    .mobile-hint { display: none; color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+
+    @media (max-width: 900px) {
+      .top-status { grid-template-columns: 1fr 1fr; }
+      .champion { grid-column: 1 / -1; }
+      .mobile-hint { display: block; }
+      .section-title { align-items: flex-start; flex-direction: column; gap: 3px; }
+    }
+
+    @media (max-width: 640px) {
+      :root { --card-width: 286px; --slot-height: 156px; }
+      header { padding: 22px 16px; }
+      .wrap { padding: 14px 10px 34px; }
+      .panel { padding: 12px; border-radius: 22px; }
+      .top-status { grid-template-columns: 1fr; gap: 10px; }
+      .tabs { margin: 12px 0; }
+      .tab { min-height: 38px; padding-inline: 14px; }
+      .bracket { gap: 34px; padding-left: 2px; padding-right: 2px; }
+      .slot::after { right: -34px; width: 34px; }
+      .game { border-radius: 18px; padding: 10px; }
+      .score-input { font-size: 16px; }
+      th, td { padding: 11px 12px; font-size: 13px; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      header, .toolbar, .tabs, .score-input, .game-actions { display: none !important; }
+      .panel { display: block !important; box-shadow: none; border: 0; page-break-after: always; }
+      .panel:not(#bracket) { display: none !important; }
+      .bracket-scroll { overflow: visible; }
+      .game { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Black Butte Ranch 2026 Family Pickleball Tournament</h1>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="Tournament controls">
+      <button class="danger" id="resetBtn">Reset Bracket</button>
+    </section>
+
+    <nav class="tabs" aria-label="Bracket tabs">
+      <button class="tab active" data-tab="bracket">Full Bracket</button>
+      <button class="tab" data-tab="winner">Main Bracket</button>
+      <button class="tab" data-tab="lower">Lower Bracket</button>
+      <button class="tab" data-tab="finals">Finals</button>
+      <button class="tab" data-tab="teams">Team Progress</button>
+    </nav>
+
+    <section id="bracket" class="panel active"></section>
+    <section id="winner" class="panel"></section>
+    <section id="lower" class="panel"></section>
+    <section id="finals" class="panel"></section>
+    <section id="teams" class="panel"></section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "family-pickleball-visual-bracket-opening-match-v1";
+
+    const teams = [
+      { id: "T1", name: "Sean Kyler + Gideon Johnson" },
+      { id: "T2", name: "Seth Johnson + Ali Marr" },
+      { id: "T3", name: "Javen Johnson + Linda Allmon" },
+      { id: "T4", name: "Bart Brueck + Elin Kyler" },
+      { id: "T5", name: "Katie Kyler + Elliott Ruble" },
+      { id: "T6", name: "Mary Nygard + Gracie Johnson" },
+      { id: "T7", name: "Ryan Kyler + Elle Nygard" },
+      { id: "T8", name: "Gordie Nygard + Abbi Brueck" },
+      { id: "T9", name: "Noah Kyler + Jamie Marr" },
+      { id: "T10", name: "Kristi Brueck + Griffin Nygard" },
+      { id: "T11", name: "Molly Kyler + Mark Johnson" },
+      { id: "T12", name: "Sydney Johnson + Gary Allmon" },
+      { id: "T13", name: "Callie Johnson + Taylor Marr" },
+      { id: "T14", name: "Andrew Brueck + Alicia Nygard" },
+      { id: "T15", name: "Addison Brueck + Karen Johnson" },
+      { id: "T16", name: "Josie Johnson + Todd Ruble" },
+      { id: "T17", name: "Beau Nygard + Sarah Ruble" }
+    ];
+
+    const teamById = Object.fromEntries(teams.map((team, index) => [team.id, { ...team, order: index + 1 }]));
+    const teamSource = id => ({ type: "team", id });
+    const winnerSource = gameId => ({ type: "winner", gameId });
+    const loserSource = gameId => ({ type: "loser", gameId });
+
+    const games = [
+      // Opening Match. The winner enters the main 16-team bracket. The loser moves to the lower bracket.
+      { id: "OM1", section: "winner", round: "Opening Match", label: "Opening Match", a: teamSource("T16"), b: teamSource("T17"), winnerTo: "Main Game 1", loserTo: "Lower Opening" },
+
+      // Main bracket: a clean 16-team bracket after the Opening Match.
+      { id: "W1G1", section: "winner", round: "Main Round 1", label: "Main Game 1", a: teamSource("T1"), b: teamSource("T2"), winnerTo: "Main Game 9", loserTo: "Lower Game 2" },
+      { id: "W1G2", section: "winner", round: "Main Round 1", label: "Main Game 2", a: winnerSource("OM1"), b: teamSource("T15"), winnerTo: "Main Game 9", loserTo: "Lower Game 3" },
+      { id: "W1G3", section: "winner", round: "Main Round 1", label: "Main Game 3", a: teamSource("T3"), b: teamSource("T14"), winnerTo: "Main Game 10", loserTo: "Lower Game 3" },
+      { id: "W1G4", section: "winner", round: "Main Round 1", label: "Main Game 4", a: teamSource("T4"), b: teamSource("T13"), winnerTo: "Main Game 10", loserTo: "Lower Game 4" },
+      { id: "W1G5", section: "winner", round: "Main Round 1", label: "Main Game 5", a: teamSource("T5"), b: teamSource("T12"), winnerTo: "Main Game 11", loserTo: "Lower Game 4" },
+      { id: "W1G6", section: "winner", round: "Main Round 1", label: "Main Game 6", a: teamSource("T6"), b: teamSource("T11"), winnerTo: "Main Game 11", loserTo: "Lower Game 5" },
+      { id: "W1G7", section: "winner", round: "Main Round 1", label: "Main Game 7", a: teamSource("T7"), b: teamSource("T10"), winnerTo: "Main Game 12", loserTo: "Lower Game 5" },
+      { id: "W1G8", section: "winner", round: "Main Round 1", label: "Main Game 8", a: teamSource("T8"), b: teamSource("T9"), winnerTo: "Main Game 12", loserTo: "Lower Opening" },
+
+      { id: "W2G1", section: "winner", round: "Main Quarterfinals", label: "Main Game 9", a: winnerSource("W1G1"), b: winnerSource("W1G2"), winnerTo: "Main Game 13", loserTo: "Lower Game 6" },
+      { id: "W2G2", section: "winner", round: "Main Quarterfinals", label: "Main Game 10", a: winnerSource("W1G3"), b: winnerSource("W1G4"), winnerTo: "Main Game 13", loserTo: "Lower Game 7" },
+      { id: "W2G3", section: "winner", round: "Main Quarterfinals", label: "Main Game 11", a: winnerSource("W1G5"), b: winnerSource("W1G6"), winnerTo: "Main Game 14", loserTo: "Lower Game 8" },
+      { id: "W2G4", section: "winner", round: "Main Quarterfinals", label: "Main Game 12", a: winnerSource("W1G7"), b: winnerSource("W1G8"), winnerTo: "Main Game 14", loserTo: "Lower Game 9" },
+
+      { id: "W3G1", section: "winner", round: "Main Semifinals", label: "Main Game 13", a: winnerSource("W2G1"), b: winnerSource("W2G2"), winnerTo: "Main Final", loserTo: "Lower Game 12" },
+      { id: "W3G2", section: "winner", round: "Main Semifinals", label: "Main Game 14", a: winnerSource("W2G3"), b: winnerSource("W2G4"), winnerTo: "Main Final", loserTo: "Lower Game 13" },
+
+      { id: "W4G1", section: "winner", round: "Main Final", label: "Main Final", a: winnerSource("W3G1"), b: winnerSource("W3G2"), winnerTo: "Grand Final", loserTo: "Lower Final" },
+
+      // Lower bracket. The first game handles the extra team created by the Opening Match.
+      { id: "L0G1", section: "lower", round: "Lower Opening", label: "Lower Opening", a: loserSource("OM1"), b: loserSource("W1G8"), winnerTo: "Lower Game 2", loserTo: "17th place" },
+
+      { id: "L1G1", section: "lower", round: "Lower Round 1", label: "Lower Game 2", a: loserSource("W1G1"), b: winnerSource("L0G1"), winnerTo: "Lower Game 6", loserTo: "13th place" },
+      { id: "L1G2", section: "lower", round: "Lower Round 1", label: "Lower Game 3", a: loserSource("W1G2"), b: loserSource("W1G3"), winnerTo: "Lower Game 7", loserTo: "13th place" },
+      { id: "L1G3", section: "lower", round: "Lower Round 1", label: "Lower Game 4", a: loserSource("W1G4"), b: loserSource("W1G5"), winnerTo: "Lower Game 8", loserTo: "13th place" },
+      { id: "L1G4", section: "lower", round: "Lower Round 1", label: "Lower Game 5", a: loserSource("W1G6"), b: loserSource("W1G7"), winnerTo: "Lower Game 9", loserTo: "13th place" },
+
+      { id: "L2G1", section: "lower", round: "Lower Round 2", label: "Lower Game 6", a: winnerSource("L1G1"), b: loserSource("W2G1"), winnerTo: "Lower Game 10", loserTo: "9th place" },
+      { id: "L2G2", section: "lower", round: "Lower Round 2", label: "Lower Game 7", a: winnerSource("L1G2"), b: loserSource("W2G2"), winnerTo: "Lower Game 10", loserTo: "9th place" },
+      { id: "L2G3", section: "lower", round: "Lower Round 2", label: "Lower Game 8", a: winnerSource("L1G3"), b: loserSource("W2G3"), winnerTo: "Lower Game 11", loserTo: "9th place" },
+      { id: "L2G4", section: "lower", round: "Lower Round 2", label: "Lower Game 9", a: winnerSource("L1G4"), b: loserSource("W2G4"), winnerTo: "Lower Game 11", loserTo: "9th place" },
+
+      { id: "L3G1", section: "lower", round: "Lower Round 3", label: "Lower Game 10", a: winnerSource("L2G1"), b: winnerSource("L2G2"), winnerTo: "Lower Game 12", loserTo: "7th place" },
+      { id: "L3G2", section: "lower", round: "Lower Round 3", label: "Lower Game 11", a: winnerSource("L2G3"), b: winnerSource("L2G4"), winnerTo: "Lower Game 13", loserTo: "7th place" },
+
+      { id: "L4G1", section: "lower", round: "Lower Round 4", label: "Lower Game 12", a: winnerSource("L3G1"), b: loserSource("W3G1"), winnerTo: "Lower Game 14", loserTo: "5th place" },
+      { id: "L4G2", section: "lower", round: "Lower Round 4", label: "Lower Game 13", a: winnerSource("L3G2"), b: loserSource("W3G2"), winnerTo: "Lower Game 14", loserTo: "5th place" },
+
+      { id: "L5G1", section: "lower", round: "Lower Semifinal", label: "Lower Game 14", a: winnerSource("L4G1"), b: winnerSource("L4G2"), winnerTo: "Lower Final", loserTo: "4th place" },
+      { id: "L6G1", section: "lower", round: "Lower Final", label: "Lower Final", a: winnerSource("L5G1"), b: loserSource("W4G1"), winnerTo: "Grand Final", loserTo: "3rd place" },
+
+      { id: "GF1", section: "finals", round: "Grand Final", label: "Grand Final", a: winnerSource("W4G1"), b: winnerSource("L6G1"), winnerTo: "Champion", loserTo: "2nd place" },
+      { id: "GF2", section: "finals", round: "Reset Game", label: "Reset Game", a: winnerSource("W4G1"), b: winnerSource("L6G1"), onlyIfReset: true, winnerTo: "Champion", loserTo: "2nd place" }
+    ];
+
+    const gameById = Object.fromEntries(games.map(game => [game.id, game]));
+
+    const views = {
+      winner: [
+        { title: "Opening Match", ids: ["OM1"], slot: "compact" },
+        { title: "Main Round 1", ids: ["W1G1", "W1G2", "W1G3", "W1G4", "W1G5", "W1G6", "W1G7", "W1G8"], slot: "" },
+        { title: "Quarterfinals", ids: ["W2G1", "W2G2", "W2G3", "W2G4"], slot: "tall" },
+        { title: "Semifinals", ids: ["W3G1", "W3G2"], slot: "x-tall" },
+        { title: "Main Final", ids: ["W4G1"], slot: "xx-tall" }
+      ],
+      lower: [
+        { title: "Lower Opening", ids: ["L0G1"], slot: "compact" },
+        { title: "Lower Round 1", ids: ["L1G1", "L1G2", "L1G3", "L1G4"], slot: "" },
+        { title: "Lower Round 2", ids: ["L2G1", "L2G2", "L2G3", "L2G4"], slot: "" },
+        { title: "Lower Round 3", ids: ["L3G1", "L3G2"], slot: "tall" },
+        { title: "Lower Round 4", ids: ["L4G1", "L4G2"], slot: "tall" },
+        { title: "Lower Semifinal", ids: ["L5G1"], slot: "x-tall" },
+        { title: "Lower Final", ids: ["L6G1"], slot: "x-tall" }
+      ],
+      finals: [
+        { title: "Grand Final", ids: ["GF1"], slot: "final-slot" },
+        { title: "Reset Game", ids: ["GF2"], slot: "final-slot" }
+      ]
+    };
+
+    let state = loadState();
+
+    function emptyState() {
+      return { results: {}, scores: {}, updatedAt: null };
+    }
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return emptyState();
+        const parsed = JSON.parse(saved);
+        return { ...emptyState(), ...parsed, results: parsed.results || {}, scores: parsed.scores || {} };
+      } catch (error) {
+        return emptyState();
+      }
+    }
+
+    function saveState() {
+      state.updatedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function resolveSource(source) {
+      if (!source) return null;
+      if (source.type === "team") return teamById[source.id] || null;
+      const result = state.results[source.gameId];
+      const sourceGame = gameById[source.gameId];
+      if (!sourceGame) return null;
+      if (source.type === "winner") {
+        return result?.winner ? teamById[result.winner] : null;
+      }
+      if (source.type === "loser") {
+        if (!result?.winner) return null;
+        const a = resolveSource(sourceGame.a);
+        const b = resolveSource(sourceGame.b);
+        if (!a || !b) return null;
+        return result.winner === a.id ? b : a;
+      }
+      return null;
+    }
+
+    function teamsInGame(game) {
+      return [resolveSource(game.a), resolveSource(game.b)];
+    }
+
+    function isResetNeeded() {
+      if (state.results.GF2?.winner) return false;
+      const grandWinner = state.results.GF1?.winner;
+      if (!grandWinner) return false;
+      const winnerBracketChampion = resolveSource(winnerSource("W4G1"));
+      const lowerBracketChampion = resolveSource(winnerSource("L6G1"));
+      return Boolean(winnerBracketChampion && lowerBracketChampion && grandWinner === lowerBracketChampion.id);
+    }
+
+    function shouldShowGame(game) {
+      if (!game.onlyIfReset) return true;
+      return isResetNeeded() || Boolean(state.results[game.id]);
+    }
+
+    function clearDependents(changedGameId) {
+      const queue = [changedGameId];
+      const seen = new Set();
+      while (queue.length) {
+        const id = queue.shift();
+        if (seen.has(id)) continue;
+        seen.add(id);
+        for (const game of games) {
+          if (game.id === id) continue;
+          const sources = [game.a, game.b].filter(Boolean);
+          const depends = sources.some(source => source.gameId === id);
+          if (depends && (state.results[game.id] || state.scores[game.id])) {
+            delete state.results[game.id];
+            delete state.scores[game.id];
+            queue.push(game.id);
+          }
+        }
+      }
+      if (!isResetNeeded()) {
+        delete state.results.GF2;
+        delete state.scores.GF2;
+      }
+    }
+
+    function setWinner(gameId, winnerId) {
+      const game = gameById[gameId];
+      if (!game) return;
+      const [a, b] = teamsInGame(game);
+      if (!a || !b) return;
+      if (![a.id, b.id].includes(winnerId)) return;
+      const current = state.results[gameId]?.winner;
+      if (current === winnerId) return;
+      state.results[gameId] = { winner: winnerId, completedAt: new Date().toISOString() };
+      clearDependents(gameId);
+      saveState();
+      renderAll();
+    }
+
+    function resetGame(gameId) {
+      delete state.results[gameId];
+      delete state.scores[gameId];
+      clearDependents(gameId);
+      saveState();
+      renderAll();
+    }
+
+    function updateScore(gameId, value) {
+      if (value.trim()) state.scores[gameId] = value;
+      else delete state.scores[gameId];
+      saveState();
+    }
+
+    function gameLabel(game) {
+      return game.label || game.id;
+    }
+
+    function renderGame(gameId) {
+      const game = gameById[gameId];
+      if (!game || !shouldShowGame(game)) {
+        return `<div class="game pending"><div class="game-head"><div class="game-title">Reset Game</div><span class="badge">If Needed</span></div><div class="placeholder-row">Only needed if the lower-bracket winner wins the Grand Final.</div></div>`;
+      }
+
+      const [a, b] = teamsInGame(game);
+      const result = state.results[game.id];
+      const ready = Boolean(a && b);
+      const complete = Boolean(result?.winner);
+      const css = ["game", game.section === "finals" ? "final" : "", complete ? "locked" : "", !ready ? "pending" : ""].filter(Boolean).join(" ");
+
+      const renderTeam = team => {
+        if (!team) return `<div class="placeholder-row">Waiting for winner</div>`;
+        const isWinner = result?.winner === team.id;
+        const isLoser = result?.winner && result.winner !== team.id;
+        return `<button class="team-btn ${isWinner ? "winner" : ""} ${isLoser ? "loser" : ""}" ${ready ? "" : "disabled"} onclick="setWinner('${game.id}', '${team.id}')">
+          <span class="team-name">${escapeHtml(team.name)}</span>
+          ${isWinner ? `<span class="winner-mark">✓</span>` : ""}
+        </button>`;
+      };
+
+      const path = `Winner to ${escapeHtml(game.winnerTo || "next game")}${game.loserTo ? ` · Loser to ${escapeHtml(game.loserTo)}` : ""}`;
+
+      return `<div class="${css}">
+        <div class="game-head">
+          <div class="game-title">${escapeHtml(gameLabel(game))}</div>
+          <span class="badge">${escapeHtml(game.round)}</span>
+        </div>
+        ${renderTeam(a)}
+        ${renderTeam(b)}
+        <input class="score-input" value="${escapeHtml(state.scores[game.id] || "")}" placeholder="Score / notes" oninput="updateScore('${game.id}', this.value)" />
+        <div class="path-text">${path}</div>
+        <div class="game-actions">
+          <span class="winner-text">${complete ? `Winner: ${escapeHtml(teamById[result.winner]?.name || "")}` : ready ? "Tap winner" : "Waiting"}</span>
+          ${complete ? `<button class="small ghost" onclick="resetGame('${game.id}')">Reset</button>` : ""}
+        </div>
+      </div>`;
+    }
+
+    function renderBracket(title, subtitle, viewKeys) {
+      const sections = viewKeys.flatMap(key => views[key]);
+      return `
+        <div class="section-title"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(subtitle)}</p></div>
+        <p class="mobile-hint">Tip: scroll sideways to see the full bracket.</p>
+        <div class="bracket-scroll">
+          <div class="bracket">
+            ${sections.map((round, roundIndex) => `
+              <div class="round">
+                <h3>${escapeHtml(round.title)}</h3>
+                ${round.ids.map(id => `<div class="slot ${round.slot || ""} ${roundIndex === sections.length - 1 ? "no-connector" : ""}">${renderGame(id)}</div>`).join("")}
+              </div>
+            `).join("")}
+          </div>
+        </div>`;
+    }
+
+    function completedGames() {
+      return games.filter(game => shouldShowGame(game) && state.results[game.id]?.winner).length;
+    }
+
+    function getChampion() {
+      const resetWinner = state.results.GF2?.winner;
+      if (resetWinner) return teamById[resetWinner] || null;
+
+      const grandWinner = state.results.GF1?.winner;
+      if (!grandWinner) return null;
+      const lowerBracketChampion = resolveSource(winnerSource("L6G1"));
+      if (lowerBracketChampion && grandWinner === lowerBracketChampion.id) return null;
+      return teamById[grandWinner] || null;
+    }
+
+    function getLossRecords() {
+      const records = Object.fromEntries(teams.map(team => [team.id, { losses: 0, lossGames: [], wins: 0, winGames: [] }]));
+      for (const game of games) {
+        if (!shouldShowGame(game)) continue;
+        const result = state.results[game.id];
+        if (!result?.winner) continue;
+        const [a, b] = teamsInGame(game);
+        if (!a || !b) continue;
+        const loser = result.winner === a.id ? b : a;
+        records[result.winner].wins += 1;
+        records[result.winner].winGames.push(game.id);
+        records[loser.id].losses += 1;
+        records[loser.id].lossGames.push(game.id);
+      }
+      return records;
+    }
+
+    function placeForElimination(gameId) {
+      if (gameId === "L0G1") return "17th";
+      if (["L1G1", "L1G2", "L1G3", "L1G4"].includes(gameId)) return "13th";
+      if (["L2G1", "L2G2", "L2G3", "L2G4"].includes(gameId)) return "9th";
+      if (["L3G1", "L3G2"].includes(gameId)) return "7th";
+      if (["L4G1", "L4G2"].includes(gameId)) return "5th";
+      if (gameId === "L5G1") return "4th";
+      if (gameId === "L6G1") return "3rd";
+      if (["GF1", "GF2"].includes(gameId)) return "2nd";
+      return "Eliminated";
+    }
+
+    function findNextGameForTeam(teamId) {
+      for (const game of games) {
+        if (!shouldShowGame(game)) continue;
+        if (state.results[game.id]?.winner) continue;
+        const [a, b] = teamsInGame(game);
+        if (a?.id === teamId || b?.id === teamId) {
+          return game;
+        }
+      }
+      return null;
+    }
+
+    function getTeamStatusRows() {
+      const records = getLossRecords();
+      const champion = getChampion();
+      const rows = teams.map(team => {
+        const record = records[team.id];
+        const finalLossGame = record.lossGames[record.lossGames.length - 1] || null;
+        const nextGame = findNextGameForTeam(team.id);
+        let place = "In progress";
+        let status = record.losses === 0 ? "Main bracket" : "Lower bracket";
+        let next = nextGame ? `${gameLabel(nextGame)} (${nextGame.round})` : "Waiting";
+        let rowClass = "alive";
+
+        if (champion?.id === team.id) {
+          place = "Champion";
+          status = "Finished";
+          next = "Tournament winner";
+          rowClass = "champion-row";
+        } else if (record.losses >= 2) {
+          place = placeForElimination(finalLossGame);
+          status = "Finished";
+          next = `Eliminated in ${gameLabel(gameById[finalLossGame])}`;
+          rowClass = "eliminated";
+        } else if (state.results.GF2?.winner && champion?.id !== team.id && nextGame?.id === "GF2") {
+          place = "2nd";
+        } else if (!nextGame && record.losses < 2) {
+          next = "Waiting for opponent";
+        }
+
+        return { team, wins: record.wins, losses: record.losses, place, status, next, rowClass };
+      });
+
+      const placeWeight = value => {
+        if (value === "Champion") return 1;
+        if (value === "2nd") return 2;
+        if (value === "3rd") return 3;
+        if (value === "4th") return 4;
+        if (value === "5th") return 5;
+        if (value === "7th") return 7;
+        if (value === "9th") return 9;
+        if (value === "13th") return 13;
+        if (value === "17th") return 17;
+        return 99;
+      };
+
+      return rows.sort((a, b) => {
+        const ap = placeWeight(a.place);
+        const bp = placeWeight(b.place);
+        if (ap !== bp) return ap - bp;
+        if (a.losses !== b.losses) return a.losses - b.losses;
+        if (a.wins !== b.wins) return b.wins - a.wins;
+        return a.team.order - b.team.order;
+      });
+    }
+
+    function renderSummary() {
+      const champion = getChampion();
+      const records = getLossRecords();
+      const alive = teams.filter(team => records[team.id].losses < 2).length;
+      const complete = completedGames();
+      const totalVisible = games.filter(shouldShowGame).length;
+      const resetNeeded = isResetNeeded();
+
+      return `<div class="top-status">
+        <div class="champion">${champion ? escapeHtml(champion.name) : resetNeeded ? "Reset Game Needed" : "Champion TBD"}<span>${champion ? "Tournament winner" : resetNeeded ? "Both finalists have one loss." : "Keep playing through the bracket."}</span></div>
+        <div class="stat"><div class="label">Teams Alive</div><div class="value">${alive}</div></div>
+        <div class="stat"><div class="label">Completed</div><div class="value">${complete}</div></div>
+        <div class="stat"><div class="label">Remaining</div><div class="value">${Math.max(totalVisible - complete, 0)}</div></div>
+        <div class="stat"><div class="label">Format</div><div class="value" style="font-size:18px;line-height:1.25;margin-top:8px;">Double Elim</div></div>
+      </div>`;
+    }
+
+    function renderTeams() {
+      const rows = getTeamStatusRows();
+      return `${renderSummary()}
+        <div class="section-title"><h2>Team Progress</h2><p>Shows each team’s current place, bracket position, and next match.</p></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Team</th><th>Current Place</th><th>Status</th><th>Record</th><th>Next / Finished</th></tr></thead>
+            <tbody>
+              ${rows.map(row => `<tr class="${row.rowClass}"><td>${escapeHtml(row.team.name)}</td><td>${escapeHtml(row.place)}</td><td>${escapeHtml(row.status)}</td><td>${row.wins}-${row.losses}</td><td>${escapeHtml(row.next)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    function renderAll() {
+      document.getElementById("bracket").innerHTML = `${renderSummary()}${renderBracket("Full Bracket", "Opening Match, main bracket, lower bracket, and finals.", ["winner", "lower", "finals"])}`;
+      document.getElementById("winner").innerHTML = `${renderSummary()}${renderBracket("Main Bracket", "Opening Match winner enters Main Game 2.", ["winner"])}`;
+      document.getElementById("lower").innerHTML = `${renderSummary()}${renderBracket("Lower Bracket", "Teams move here after their first loss. A second loss ends their run.", ["lower"])}`;
+      document.getElementById("finals").innerHTML = `${renderSummary()}${renderBracket("Finals", "If the lower-bracket winner wins the Grand Final, the Reset Game decides the champion.", ["finals"])}`;
+      document.getElementById("teams").innerHTML = renderTeams();
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(panel => panel.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("Reset the whole bracket? This clears winners, scores, and notes.")) return;
+      state = emptyState();
+      saveState();
+      renderAll();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
