@@ -198,9 +198,8 @@
     }
 
     .round h3 {
-      position: sticky;
-      left: 0;
-      margin: 0 0 10px;
+      position: relative;
+      margin: 0 0 18px;
       font-size: 14px;
       color: var(--primary-dark);
       background: var(--surface-2);
@@ -208,28 +207,30 @@
       border-radius: 999px;
       padding: 9px 12px;
       text-align: center;
-      z-index: 2;
+      z-index: 1;
       box-shadow: var(--shadow-1);
     }
 
     .slot {
       position: relative;
-      height: var(--slot-height);
+      min-height: var(--slot-height);
+      height: auto;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      margin-bottom: 18px;
     }
 
-    .slot.tall { height: calc(var(--slot-height) * 2); }
-    .slot.x-tall { height: calc(var(--slot-height) * 4); }
-    .slot.xx-tall { height: calc(var(--slot-height) * 8); }
-    .slot.compact { height: 128px; }
-    .slot.final-slot { height: 224px; }
+    .slot.tall { min-height: calc(var(--slot-height) * 2); }
+    .slot.x-tall { min-height: calc(var(--slot-height) * 4); }
+    .slot.xx-tall { min-height: calc(var(--slot-height) * 8); }
+    .slot.compact { min-height: 206px; }
+    .slot.final-slot { min-height: 224px; }
 
     .slot::after {
       content: "";
       position: absolute;
       right: -42px;
-      top: 50%;
+      top: 82px;
       width: 42px;
       height: 2px;
       background: var(--outline-strong);
@@ -362,8 +363,9 @@
       .tabs { margin: 12px 0; }
       .tab { min-height: 38px; padding-inline: 14px; }
       .bracket { gap: 34px; padding-left: 2px; padding-right: 2px; }
-      .slot::after { right: -34px; width: 34px; }
-      .game { border-radius: 18px; padding: 10px; }
+      .slot::after { right: -34px; width: 34px; top: 78px; }
+      .round h3 { margin-bottom: 16px; }
+      .game { border-radius: 18px; padding: 12px; }
       .score-input { font-size: 16px; }
       th, td { padding: 11px 12px; font-size: 13px; }
     }
@@ -653,11 +655,12 @@
       };
 
       const path = `Winner to ${escapeHtml(game.winnerTo || "next game")}${game.loserTo ? ` · Loser to ${escapeHtml(game.loserTo)}` : ""}`;
+      const showRoundBadge = game.round && game.round !== gameLabel(game);
 
       return `<div class="${css}">
         <div class="game-head">
           <div class="game-title">${escapeHtml(gameLabel(game))}</div>
-          <span class="badge">${escapeHtml(game.round)}</span>
+          ${showRoundBadge ? `<span class="badge">${escapeHtml(game.round)}</span>` : ""}
         </div>
         ${renderTeam(a)}
         ${renderTeam(b)}
